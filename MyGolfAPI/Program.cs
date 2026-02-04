@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MyGolfAPI.Services.Auth;
+using MyGolfAPI.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("SpaDev", p =>
     {
-        p.WithOrigins("http://localhost:5173", "https://localhost:5173", "http://localhost:5174", "https://localhost:5174")
+        p.WithOrigins("http://localhost:5173", "https://localhost:5173", 
+            "http://localhost:5174", "https://localhost:5174")
          .AllowAnyHeader()
          .AllowAnyMethod();
     });
@@ -29,9 +32,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         var domain = builder.Configuration["Auth0:Domain"];
         options.Authority = $"https://{domain}/";
         options.Audience = builder.Configuration["Auth0:Audience"];
+        options.MapInboundClaims = false;
     });
 
 builder.Services.AddAuthorization();
+
+// Dependency Injection for Services
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

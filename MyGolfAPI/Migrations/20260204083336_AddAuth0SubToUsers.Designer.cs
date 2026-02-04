@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyGolfAPI.Data;
 
@@ -10,9 +11,11 @@ using MyGolfAPI.Data;
 namespace MyGolfAPI.Migrations
 {
     [DbContext(typeof(MyGolfDbContext))]
-    partial class MyGolfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260204083336_AddAuth0SubToUsers")]
+    partial class AddAuth0SubToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

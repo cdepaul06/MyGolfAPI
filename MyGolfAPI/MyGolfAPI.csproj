@@ -16,9 +16,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Users\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

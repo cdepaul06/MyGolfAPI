@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyGolfAPI.Data;
 
@@ -10,9 +11,11 @@ using MyGolfAPI.Data;
 namespace MyGolfAPI.Migrations
 {
     [DbContext(typeof(MyGolfDbContext))]
-    partial class MyGolfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260204082750_AddUserRequiredFields")]
+    partial class AddUserRequiredFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,10 +32,6 @@ namespace MyGolfAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Auth0Sub")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -48,9 +47,6 @@ namespace MyGolfAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Auth0Sub")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });
