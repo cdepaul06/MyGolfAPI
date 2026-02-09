@@ -21,9 +21,9 @@ namespace MyGolfAPI.Services.Auth
             if (string.IsNullOrWhiteSpace(sub))
                 throw new InvalidOperationException("Missing 'sub' claim in token.");
 
-            var email = principal.FindFirstValue("email") ?? "";
-            var nickname = principal.FindFirstValue("nickname");
-            var name = principal.FindFirstValue("name");
+            var email = principal.FindFirstValue("https://mygolfapi/email") ?? "";
+            var name = principal.FindFirstValue("https://mygolfapi/name");
+            var nickname = principal.FindFirstValue("https://mygolfapi/nickname");
 
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Auth0Sub == sub, ct);
 
