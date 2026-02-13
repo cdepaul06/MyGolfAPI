@@ -10,8 +10,8 @@ namespace MyGolfAPI.Entities
         [Required]
         public string Auth0Sub { get; set; } = null!;
 
-        [Required]
         public string Username { get; set; } = null!;
+        public string NormalizedUsername { get; set; } = null!;
 
         [Required]
         public string Email { get; set; } = string.Empty;

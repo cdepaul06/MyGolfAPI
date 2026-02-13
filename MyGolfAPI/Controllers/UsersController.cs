@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyGolfAPI.DTOs.Users;
 using MyGolfAPI.Services.Auth;
 
 
@@ -17,37 +18,78 @@ namespace MyGolfAPI.Controllers
             _currentUserService = currentUserService;
         }
 
-        // Read - Get current user info
+        /// <summary>
+        /// Get the current user's profile (auto-creates on first login).
+        /// </summary>
         [HttpGet("me")]
-        public async Task<IActionResult> Me(CancellationToken ct)
+        public async Task<ActionResult<UserReadDto>> GetMe(CancellationToken ct)
         {
-            var dto = await _currentUserService.GetMeAsync(User, ct);
-            return Ok(dto);
+            try
+            {
+                var user = await _currentUserService.GetMeAsync(User, ct);
+                return Ok(user);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
         }
 
-        // Complete - Create or complete current user info
+        /// <summary>
+        /// Create or complete current user info.
+        /// </summary>
         [HttpPost("me")]
-        public async Task<IActionResult> CreateOrCompleteMe([FromBody] DTOs.Users.UserCreateDto dto, CancellationToken ct)
+        public async Task<ActionResult<UserReadDto>> CreateOrCompleteMe([FromBody] UserCreateDto dto, CancellationToken ct)
         {
-            var result = await _currentUserService.CreateOrCompleteMeAsync(User, dto, ct);
-            return Ok(result);
+            try
+            {
+                var user = await _currentUserService.CreateOrCompleteMeAsync(User, dto, ct);
+                return Ok(user);
+
+            }
+            catch (ArgumentException ex)
+            {
+               return BadRequest(new { message = ex.Message });   
+            }
         }
 
-        // Update - Update current user info
+        /// <summary>
+        /// Update current user info.
+        /// </summary>
         [HttpPatch("me")]
-        public async Task<IActionResult> UpdateMe([FromBody] DTOs.Users.UserUpdateDto dto, CancellationToken ct)
+        public async Task<ActionResult<UserReadDto>> UpdateMe([FromBody] UserUpdateDto dto, CancellationToken ct)
         {
-            var result = await _currentUserService.UpdateMeAsync(User, dto, ct);
-            return Ok(result);
+            try
+            {
+                var user = await _currentUserService.UpdateMeAsync(User, dto, ct); 
+                return Ok(user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { message = "User profile not found." });
+            }
         }
 
-        // Delete - Delete current user (Local DB row only)
+        /// <summary>
+        /// Delete current user (Local DB row only).
+        /// </summary>
         [HttpDelete("me")]
         public async Task<IActionResult> DeleteMe(CancellationToken ct)
         {
-            await _currentUserService.DeleteMeAsync(User, ct);
-            return NoContent();
+            try
+            {
+                await _currentUserService.DeleteMeAsync(User, ct);
+                return NoContent();
 
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
         }
     }
 }

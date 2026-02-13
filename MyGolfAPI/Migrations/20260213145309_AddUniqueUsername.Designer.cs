@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyGolfAPI.Data;
 
@@ -10,9 +11,11 @@ using MyGolfAPI.Data;
 namespace MyGolfAPI.Migrations
 {
     [DbContext(typeof(MyGolfDbContext))]
-    partial class MyGolfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260213145309_AddUniqueUsername")]
+    partial class AddUniqueUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,22 +46,16 @@ namespace MyGolfAPI.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalizedUsername")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Auth0Sub")
                         .IsUnique();
 
-                    b.HasIndex("NormalizedUsername")
+                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Users");

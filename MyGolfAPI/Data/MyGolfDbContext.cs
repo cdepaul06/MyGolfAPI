@@ -15,9 +15,24 @@ namespace MyGolfAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Auth0Sub)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.NormalizedUsername)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Username)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.NormalizedUsername)
+                .HasMaxLength(50)
+                .IsRequired();
         }
     }
 }
